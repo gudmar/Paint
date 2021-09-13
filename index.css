@@ -1,0 +1,101 @@
+body{
+    display: flex;
+}
+.controls{
+    position: relative;
+    width: 60px;
+    display: flex;
+    flex-direction: column;
+    /* flex-grow: 1; */
+    align-items: center;
+    background-color: lightgrey;
+    height: 90vh;
+}
+.button{
+    border: black thin solid;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 50px;
+    height: 50px;
+    background-color: white;
+    margin-top: 10px;
+}
+.button>div{
+    position: relative;
+    width: 80%;
+    height: 80%;
+}
+.button>.red{
+    background-color: red;
+}
+.button>.black{
+    background-color: black;
+}
+.button>.yellow{
+    background-color: yellow;
+}
+.button>.brown{
+    background-color: brown;
+}
+.button>.green{
+    background-color: green;
+}
+.button>.blue{
+    background-color: blue;
+}
+.button>.grey{
+    background-color: grey;
+}
+.button.switch>div{
+    border-width: 5px;
+    border-style: solid;
+    box-sizing: border-box;
+    border-radius: 3px;
+}
+.button.switch.border>div{
+    background-color: rgb(200, 200, 200);
+    border-color: black;
+}
+.button.switch.fill>div{
+    background-color: black;
+    border-color: rgb(200, 200, 200);
+}
+.button.active{
+    background-color: darkgrey;
+}
+
+
+.button>img{
+    position: relative;
+    width: 90%;
+    height: 90%;
+}   
+.button:hover::after{
+    content:'';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top:0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.5)
+} 
+.button:active::after{
+    content:'';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top:0;
+    left: 0;
+    background-color: rgba(5, 5, 5, 0.5)
+} 
+.canvas{
+    position: relative;
+    /* flex-grow: 9; */
+    width: calc( 100% - 60px );
+    height: 90vh;
+    background-color: white;
+    border: solid black thin
+}

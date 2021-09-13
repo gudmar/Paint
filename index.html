@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Shape drawer</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="index.js"></script>
+</head>
+<body>
+    
+    <div class="controls">
+        <div class="button" id="pen" data-shape = "pen">
+            <img src="./img/pen.svg" alt="Pen">
+        </div>
+        <div class="button" id="circle" data-shape = "circle">
+            <img src="./img/circle.svg" alt="Circle">
+        </div>
+        <div class="button" id="triangle" data-shape = "triangle">
+            <img src="./img/triangle.svg" alt="triangle">
+        </div>
+        <div class="button" id="rectangle" data-shape = "rectangle">
+            <img src="./img/rectangle.svg" alt="Rectangle">
+        </div>
+        <div class="button switch fill" id="border-fill-switch">
+            <div></div>
+        </div>
+        <div class="button" id="none" data-color = "none">
+                <div class="none"></div>
+            </div>
+        <div class="button" id="red" data-color = "red">
+            <div class="red"></div>
+        </div>
+        <div class="button" id="green" data-color = "green">
+            <div class="green"></div>
+        </div>
+        <div class="button" id="blue" data-color = "blue">
+            <div class="blue"></div>
+        </div>
+        <div class="button" id="yellow" data-color = "yellow">
+            <div class="yellow"></div>
+        </div>
+        <div class="button" id="brown" data-color = "brown">
+            <div class="brown"></div>
+        </div>
+        <div class="button" id="black" data-color = "black">
+            <div class="black"></div>
+            <!-- <img src="./img/black.svg" alt="black"> -->
+        </div>
+        <div class="button" id="save">
+            Save
+        </div>
+            
+    </div>
+    <div class="canvas">
+        <svg  height="100" viewBox="0 0 100 100" width="100" xmlns="http://www.w3.org/2000/svg" id = "svgCanvas">
+        </svg>
+
+    </div>
+<script>
+    function getWindowSize(canvas){
+        let height = window.getComputedStyle(canvas).height;
+        let width = window.getComputedStyle(canvas).width;
+        return {w: parseFloat(width), h: parseFloat(height)};
+    }
+    window.addEventListener("DOMContentLoaded", (e) =>{
+        let canvas = document.querySelector('.canvas');
+        let svg = document.getElementById('svgCanvas');
+        let switchBorderButton = document.getElementById('border-fill-switch');
+        let setCanvasDim = (canvas) => {
+            let canvasSize = getWindowSize(canvas);
+            let viewBox = `0 0 ${canvasSize.w} ${canvasSize.h}`;
+            svg.setAttributeNS(null, 'height', canvasSize.h);
+            svg.setAttributeNS(null, 'width', canvasSize.w);
+            svg.setAttributeNS(null, 'viewBox', viewBox);
+        }
+        setCanvasDim(canvas);
+
+        let nav = new Navigator();
+        let med = new Mediator();
+        nav.addSubscriber(med);
+        nav.watchForStateChanges();
+        med.setDrawingEvents();
+
+        window.addEventListener('resize', (e) => {
+            setCanvasDim(canvas);
+            
+        })
+
+        document.getElementById('save').addEventListener('click', (e) => {
+            console.log(document.querySelector('.canvas').innerHTML)
+        })
+        // switchBorderButton.addEventListener('click', (e) => {
+        //     if (switchBorderButton.classList.contains("fill")) {
+        //         switchBorderButton.classList.remove('fill');
+        //         switchBorderButton.classList.add('border');
+        //     } else {
+        //         switchBorderButton.classList.remove('border');
+        //         switchBorderButton.classList.add('fill');
+        //     }
+        // })
+    })
+</script>
+</body>
+</html>
