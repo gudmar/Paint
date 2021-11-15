@@ -5,7 +5,7 @@
 
 // Now refreshShape can be removed with removeEventListener !!
 // const tempRefreshShape = (e) => {
-//     this.currentShape.modify(this.p1, getMousePositionFromSVG.bind(this, e)());
+//     this.currentShape.modify(this.p1, getMouseTouchPositionFromSVG.bind(this, e)());
 // }
 // const refreshShape = tempRefreshShape.bind(this)
 
@@ -103,16 +103,16 @@ class Pen extends Figure{
     }
     draw(p1, p2){
         // only one p i significant: p2. Will keep both points for compatibility with other classes
-        console.log('%c' + p2.x + '  ' + p2.y, "background-color: yellow;")
+        // console.log('%c' + p2.x + '  ' + p2.y, "background-color: yellow;")
         if (this.isStarted) {
             let d = this.element.getAttribute('d') + ` L${p2.x} ${p2.y}`;
-            console.log(d)
+            // console.log(d)
             this.element.setAttribute('d', d);
             this.d = d;
         } else {
             let path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
             let d = `M${p2.x} ${p2.y}`;
-            console.log(d)
+            // console.log(d)
             path.setAttributeNS(null, 'd', d);
             // path.setAttributeNS(null, 'stroke-width', '3');
             // path.setAttributeNS(null, 'fill', this.bgColor);
@@ -123,9 +123,9 @@ class Pen extends Figure{
             this.isStarted = true;
             // this.element = this.svgElement.getElementById(this.id);
             this.element = path;
-            console.log(path)
+            // console.log(path)
         }
-        console.log(this.svgElement.getElementById(this.id))
+        // console.log(this.svgElement.getElementById(this.id))
     }
     deleteElement() {
 
@@ -226,8 +226,7 @@ class Navigator{
         let switchBorderButton = document.getElementById('border-fill-switch');
         this.subscribers = []; // list of objects to inform
         this.isSetFill = true;
-
-        switchBorderButton.addEventListener('click', (e) => {
+        let switchClasses = function(e) {
             if (switchBorderButton.classList.contains("fill")) {
                 switchBorderButton.classList.remove('fill');
                 switchBorderButton.classList.add('border');
@@ -237,7 +236,21 @@ class Navigator{
                 switchBorderButton.classList.add('fill');
                 this.isSetFill = true;
             }
-        })
+        }.bind(this)
+
+        // switchBorderButton.addEventListener('touch', switchClasses)
+        switchBorderButton.addEventListener('click', switchClasses)
+            // (e) => {
+            // if (switchBorderButton.classList.contains("fill")) {
+            //     switchBorderButton.classList.remove('fill');
+            //     switchBorderButton.classList.add('border');
+            //     this.isSetFill = false;
+            // } else {
+            //     switchBorderButton.classList.remove('border');
+            //     switchBorderButton.classList.add('fill');
+            //     this.isSetFill = true;
+            // }
+        // })
     }
     addSubscriber(objectInstance) {
         this.subscribers.push(objectInstance);
@@ -323,19 +336,33 @@ class Mediator{
         console.dir(this.activateElement)
         let figure = null;
 
-        function getMousePositionFromSVG(e){
+        function getClientXYFromEvent(e){
+            let mouseEvents = ['mousemove', 'mouseup', 'mousedown'];
+            let touchEvents = ['touchstart', 'touchend', 'touchmove'];
+            let isMouseEvent = mouseEvents.indexOf(e.type)!=-1?true:false;
+            let isTouchEvent = touchEvents.indexOf(e.type)!=-1?true:false;
+            let x, y;
+            if (isMouseEvent) return {x:e.clientX, y: e.clientY}
+            if (isTouchEvent) return {x:e.touches[0].clientX, y:e.touches[0].clientY};
+            return {x:undefined, y:undefined};
+        }
+
+        function getMouseTouchPositionFromSVG(e){
             let svg = this.svgElement;
+            let x, y;
             var pt = svg.createSVGPoint();
             pt.x = e.clientX; pt.y = e.clientY;
+            ({x, y} = getClientXYFromEvent(e));
+            pt.x = x; pt.y = y;
             return pt.matrixTransform(svg.getScreenCTM().inverse());
           }
         const tempRefreshShape = (e) => {
-            this.currentShape.modify(this.p1, getMousePositionFromSVG.bind(this, e)());
+            this.currentShape.modify(this.p1, getMouseTouchPositionFromSVG.bind(this, e)());
         }
         const refreshShape = tempRefreshShape.bind(this)
 
         function startDrawing(e) {
-            let p1 = getMousePositionFromSVG.bind(this, e)()
+            let p1 = getMouseTouchPositionFromSVG.bind(this, e)()
             let p2 = p1;
             this.p1 = p1;
             switch (this.state.shape) {
@@ -359,7 +386,9 @@ class Mediator{
             console.log(this.currentShape)
             console.log(this.activateElement)
             this.activateElement.addEventListener('mousemove', refreshShape);
+            this.activateElement.addEventListener('touchmove', refreshShape);
             window.addEventListener('mouseup', stopDrawing.bind(this));
+            window.addEventListener('touchup', stopDrawing.bind(this));
         }
         function stopDrawing(e) {
             this.figure = null;
@@ -369,10 +398,11 @@ class Mediator{
             console.log('Stop drawing')
             console.log(this.activateElement)
             this.activateElement.removeEventListener('mousemove', refreshShape);
+            this.activateElement.removeEventListener('touchmove', refreshShape);
         }
 
         this.activateElement.addEventListener('mousedown', startDrawing.bind(this));
-        
+        this.activateElement.addEventListener('touchdown', startDrawing.bind(this));
         
     }
 }
