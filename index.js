@@ -390,7 +390,7 @@ class Mediator{
             this.activateElement.addEventListener('mousemove', refreshShape);
             this.activateElement.addEventListener('touchmove', refreshShape);
             window.addEventListener('mouseup', stopDrawing.bind(this));
-            window.addEventListener('touchup', stopDrawing.bind(this));
+            window.addEventListener('touchend', stopDrawing.bind(this));
         }
         function stopDrawing(e) {
             e.preventDefault();
@@ -402,7 +402,7 @@ class Mediator{
         }
 
         this.activateElement.addEventListener('mousedown', startDrawing.bind(this));
-        this.activateElement.addEventListener('touchdown', startDrawing.bind(this));
+        this.activateElement.addEventListener('touchstart', startDrawing.bind(this));
         
     }
 }
