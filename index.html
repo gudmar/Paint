@@ -89,17 +89,31 @@
         })
 
         document.getElementById('save').addEventListener('click', (e) => {
-            console.log(document.querySelector('.canvas').innerHTML)
+            let svgHolder = document.querySelector('.canvas');
+            writeToFile(getFileName(), svgHolder);
+            console.log(svgHolder.innerHTML);
         })
-        // switchBorderButton.addEventListener('click', (e) => {
-        //     if (switchBorderButton.classList.contains("fill")) {
-        //         switchBorderButton.classList.remove('fill');
-        //         switchBorderButton.classList.add('border');
-        //     } else {
-        //         switchBorderButton.classList.remove('border');
-        //         switchBorderButton.classList.add('fill');
-        //     }
-        // })
+
+        function getFileName(){
+            let now = new Date();
+            let year = now.getFullYear().toString();
+            let month = now.getMonth().toString();
+            let day = now.getDay().toString();
+            let hour = now.getHours().toString();
+            let minutes = now.getMinutes().toString();
+            let sectonds = now.getSeconds().toString();
+            let us = now.getMilliseconds().toString();
+            return `${year}_${month}_${day}_${hour}${minutes}${sectonds}${us}.svg`;
+        }
+
+        function writeToFile(name, objectToSave){
+            let serializer = new XMLSerializer();
+            objectToSave = serializer.serializeToString(svg);
+            let dummyLink = document.createElement('a');
+            dummyLink.href = "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(objectToSave);
+            dummyLink.download = name;
+            dummyLink.click();
+        }
     })
 </script>
 </body>
