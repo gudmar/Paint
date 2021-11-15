@@ -357,11 +357,13 @@ class Mediator{
             return pt.matrixTransform(svg.getScreenCTM().inverse());
           }
         const tempRefreshShape = (e) => {
+            e.preventDefault();
             this.currentShape.modify(this.p1, getMouseTouchPositionFromSVG.bind(this, e)());
         }
         const refreshShape = tempRefreshShape.bind(this)
 
         function startDrawing(e) {
+            e.preventDefault();
             let p1 = getMouseTouchPositionFromSVG.bind(this, e)()
             let p2 = p1;
             this.p1 = p1;
@@ -391,12 +393,10 @@ class Mediator{
             window.addEventListener('touchup', stopDrawing.bind(this));
         }
         function stopDrawing(e) {
+            e.preventDefault();
             this.figure = null;
             this.currentShape = null;
             this.p1 = null;
-            console.dir(this)
-            console.log('Stop drawing')
-            console.log(this.activateElement)
             this.activateElement.removeEventListener('mousemove', refreshShape);
             this.activateElement.removeEventListener('touchmove', refreshShape);
         }
