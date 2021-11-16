@@ -238,7 +238,7 @@ class Navigator{
             }
         }.bind(this)
 
-        // switchBorderButton.addEventListener('touch', switchClasses)
+        switchBorderButton.addEventListener('touchstart', switchClasses)
         switchBorderButton.addEventListener('click', switchClasses)
             // (e) => {
             // if (switchBorderButton.classList.contains("fill")) {
@@ -295,6 +295,7 @@ class Navigator{
                 this.informAllSubscribers();                
             }
             button.addEventListener('click', clickHandler.bind(this))
+            button.addEventListener('touchstart', clickHandler.bind(this))
         }
     }
 }
